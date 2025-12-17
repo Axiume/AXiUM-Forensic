@@ -1,0 +1,5 @@
+{
+  "name": "Forensic.AI",
+  "description": "A cyberpunk-themed forensic image analysis tool using Google Gemini API to detect AI-generated content.",
+  "requestFramePermissions": []
+}
