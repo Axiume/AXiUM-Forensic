@@ -21,9 +21,10 @@ export interface AppSettings {
   apiKey: string;
   model: string;
   socialLinks: {
+    instagram: string;
     twitter: string;
-    github: string;
-    linkedin: string;
+    facebook: string;
+    telegram: string;
   };
 }
 
@@ -31,6 +32,7 @@ export interface ChartDataItem {
   name: string;
   value: number;
   fill?: string;
+  [key: string]: string | number | undefined;
 }
 
 export interface AnalysisResult {
@@ -54,5 +56,15 @@ export interface Translation {
   contact_us: string;
   send: string;
   blog_title: string;
+  footer_credit: string;
   footer_rights: string;
+  how_it_works: string;
+  step_1: string;
+  step_1_desc: string;
+  step_2: string;
+  step_2_desc: string;
+  step_3: string;
+  step_3_desc: string;
+  download_report: string;
+  history_title: string;
 }
