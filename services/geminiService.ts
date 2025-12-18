@@ -15,19 +15,30 @@ export const analyzeImage = async (
 
   const ai = new GoogleGenAI({ apiKey });
 
+  // Extremely detailed forensic prompt to push the model's scrutiny
   const systemPrompt = `
-    Act as a forensic image expert. Analyze this image. 
-    Return a STRICT JSON response with these keys: 
-    'is_ai_generated' (boolean), 
-    'confidence_score' (number 0-100), 
-    'chart_data' (an array of objects with 'name' and 'value' for a pie chart showing probabilities of different artifacts like 'noise', 'lighting', 'anatomy'), 
-    and 'detailed_analysis' (a 3-paragraph technical explanation). 
-    Do not use markdown formatting, just raw JSON.
+    You are a world-class Digital Forensic Investigator specializing in AI generation detection and deepfake analysis.
+    Your task is to perform a pixel-by-pixel, high-fidelity scan of the provided image to identify if it is synthetic (AI-generated) or authentic.
+
+    CRITICAL ANALYSIS PROTOCOL:
+    1. FREQUENCY DOMAIN: Check for GAN/Diffusion signature artifacts in high-frequency noise patterns.
+    2. MICRO-TEXTURES: Inspect skin pores, hair follicles, and fabric textures for repeating patterns or unnatural smoothness.
+    3. LIGHTING & SHADOWS: Analyze light source directionality. Look for inconsistent specular highlights in eyes or impossible shadow casting.
+    4. GEOMETRIC ANOMALIES: Scrutinize background structures, text rendering, and complex anatomical parts (fingers, teeth, ears).
+    5. COMPRESSION ARTIFACTS: Differentiate between JPEG double-compression and AI-generated grid misalignments.
+
+    OUTPUT FORMAT:
+    You must return a STRICT JSON object. No markdown, no pre-amble.
+    Keys:
+    - 'is_ai_generated': boolean
+    - 'confidence_score': number (0-100)
+    - 'chart_data': Array of {name: string, value: number} representing probability of anomalies (e.g., "Noise Inconsistency", "Geometry Error", "Luminance Flaws").
+    - 'detailed_analysis': A comprehensive technical report (min 3 paragraphs) detailing the specific forensic evidence found at the pixel level. Use technical terminology.
   `;
 
   try {
     const response = await ai.models.generateContent({
-      model: modelName || 'gemini-2.5-flash',
+      model: modelName || 'gemini-2.5-flash-image',
       contents: {
         parts: [
           {
@@ -35,7 +46,7 @@ export const analyzeImage = async (
           },
           {
             inlineData: {
-              mimeType: "image/jpeg", // Assuming JPEG for simplicity, GenAI handles most
+              mimeType: "image/jpeg",
               data: cleanBase64
             }
           }
@@ -56,23 +67,24 @@ export const analyzeImage = async (
                 properties: {
                   name: { type: Type.STRING },
                   value: { type: Type.NUMBER },
-                }
+                },
+                required: ["name", "value"]
               }
             }
-          }
+          },
+          required: ["is_ai_generated", "confidence_score", "detailed_analysis", "chart_data"]
         }
       }
     });
 
     const text = response.text;
-    if (!text) throw new Error("Empty response from AI");
+    if (!text) throw new Error("Empty response from AI core.");
 
-    // Clean potential markdown blocks just in case, though responseMimeType should handle it
     const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(cleanText) as AnalysisResult;
 
-  } catch (error) {
-    console.error("Gemini Scan Failed:", error);
-    throw error;
+  } catch (error: any) {
+    console.error("Forensic Analysis Failure:", error);
+    throw new Error(error.message || "Failed to establish neural uplink for analysis.");
   }
 };

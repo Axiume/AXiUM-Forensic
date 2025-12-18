@@ -603,11 +603,11 @@ const App: React.FC = () => {
                    onChange={(e) => db.updateSettings({...db.settings, model: e.target.value})}
                    className="w-full bg-black border border-white/20 p-3 rounded text-white font-mono focus:border-cyber-green outline-none"
                  >
-                   <option value="gemini-2.5-flash">Gemini 2.5 Flash (Standard)</option>
-                   <option value="gemini-1.5-pro">Gemini 1.5 Pro (High Reasoning)</option>
-                   <option value="gemini-1.5-flash">Gemini 1.5 Flash (Fast)</option>
-                   <option value="gemini-pro-vision">Gemini Pro Vision (Legacy)</option>
-                   <option value="gemini-3-pro-preview">Gemini 3.0 Pro (Experimental)</option>
+                   <option value="gemini-2.5-flash-image">Gemini 2.5 Flash Image (Forensic Optimized)</option>
+                   <option value="gemini-3-pro-image-preview">Gemini 3.0 Pro Image (Deep Scrutiny)</option>
+                   <option value="gemini-3-pro-preview">Gemini 3.0 Pro (Text/Reasoning)</option>
+                   <option value="gemini-3-flash-preview">Gemini 3.0 Flash (Fast)</option>
+                   <option value="gemini-2.5-flash-lite-latest">Gemini 2.5 Flash Lite (Low Resource)</option>
                  </select>
                </div>
              </div>
